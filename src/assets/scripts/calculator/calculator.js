@@ -1,23 +1,28 @@
-async function Init() {
-    const { diffDates, diffToHtml } = await import("./datecalc.js");
-    const { formatError } = await import("../utils.js");
+'use strict';
 
-    const dateCalcForm = document.getElementById("datecalc");
-    const dateCalcResult = document.getElementById("datecalc__result");
+import { diffDates, diffToHtml } from "./datecalc.js";
+import { formatError } from "../utils.js";
 
-    dateCalcForm.addEventListener("submit", (e) => {
-        dateCalcResult.innerHTML = "";
-        e.preventDefault();
+let dateCalcForm = null;
+let dateCalcResult = null;
 
-        let { firstDate, secondDate } = e.target.elements;
-        firstDate = firstDate.value, secondDate = secondDate.value;
+function formSubmitHandler(e) {
+    dateCalcResult.innerHTML = "";
+    e.preventDefault();
 
-        if (firstDate && secondDate) {
-            const diff = diffDates(firstDate, secondDate);
-            dateCalcResult.innerHTML = diffToHtml(diff);
-        }
-        else dateCalcResult.innerHTML = formatError("Для расчета промежутка необходимо заполнить оба поля");
-    });
+    let { firstDate, secondDate } = e.target.elements;
+    firstDate = firstDate.value, secondDate = secondDate.value;
+
+    if (firstDate && secondDate) {
+        const diff = diffDates(firstDate, secondDate);
+        dateCalcResult.innerHTML = diffToHtml(diff);
+    }
+    else dateCalcResult.innerHTML = formatError("Для расчета промежутка необходимо заполнить оба поля");
 }
 
-Init();
+export function init() {
+    dateCalcForm = document.getElementById("datecalc");
+    dateCalcResult = document.getElementById("datecalc__result");
+
+    dateCalcForm.addEventListener("submit", formSubmitHandler);
+}

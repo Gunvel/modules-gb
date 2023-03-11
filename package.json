@@ -1,0 +1,30 @@
+{
+  "name": "modules-gb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --mode=development",
+    "prod": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gunvel/modules-gb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gunvel/modules-gb/issues"
+  },
+  "homepage": "https://github.com/Gunvel/modules-gb#readme",
+  "devDependencies": {
+    "webpack": "^5.76.1",
+    "webpack-cli": "^5.0.1"
+  },
+  "dependencies": {
+    "howler": "^2.2.3",
+    "luxon": "^3.3.0"
+  }
+}

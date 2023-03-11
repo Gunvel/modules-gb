@@ -1,18 +1,20 @@
+'use strict';
+
 export class ContentSwitcher {
-    #contentArea = undefined;
     #buttons = undefined;
     #attributeName = undefined;
+    #hiddenClass = undefined;
     #contents = undefined;
 
-    constructor(contentArea, buttons, attributeName, contents) {
-        this.#contentArea = contentArea;
+    constructor(buttons, attributeName, hiddenClass, contents) {
         this.#buttons = buttons;
         this.#attributeName = attributeName;
+        this.#hiddenClass = hiddenClass;
         this.#contents = contents;
     }
 
     #click = (e) => {
-        if (this.#contentArea == undefined || this.#attributeName == undefined)
+        if (this.#attributeName == undefined)
             return;
 
         let target = e.target;
@@ -21,15 +23,23 @@ export class ContentSwitcher {
         this.switchOn(content);
     }
 
-    #loadScript = (url, callback) => {
-        if (!url) return;
+    #viewContent = (block) => {
+        if (this.#hiddenClass == undefined || this.#hiddenClass == null) return;
 
-        const element = document.createElement("script");
-        element.type = "text/javascript";
-        element.src = url;
-        element.onload = callback;
+        block.classList.remove(this.#hiddenClass);
+    }
 
-        this.#contentArea.appendChild(element);
+    #hiddenContent = (block) => {
+        if (this.#hiddenClass == undefined || this.#hiddenClass == null) return;
+
+        if (!block.classList.contains(this.#hiddenClass))
+            block.classList.add(this.#hiddenClass);
+    }
+
+    #hideAllContents = () => {
+        for (const content in this.#contents) {
+            this.#hiddenContent(this.#contents[content]);
+        }
     }
 
     switchOn = (contantName) => {
@@ -41,17 +51,8 @@ export class ContentSwitcher {
         if (content == null || content == undefined)
             return;
 
-        this.#contentArea.innerHTML = '';
-        this.#contentArea.innerHTML = content.markup;
-
-        if (content.scripts != undefined) {
-            for (const script of content.scripts) {
-                this.#loadScript(script.url, script.callback);
-            }
-        }
-
-        if (content.onload != undefined)
-            content.onload();
+        this.#hideAllContents();
+        this.#viewContent(content);
     }
 
     init = () => {
@@ -61,5 +62,7 @@ export class ContentSwitcher {
         for (const button of this.#buttons) {
             button.onclick = this.#click;
         }
+
+        this.#hideAllContents();
     }
 }

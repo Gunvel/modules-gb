@@ -1,23 +1,19 @@
-import { calculatorMarkup, timerMarkup } from "./utils.js";
 import { ContentSwitcher } from "./contentSwitcher.js";
+import { init as calculatorInit } from "./calculator/calculator.js"
+import { init as timerInit } from "./timer/timer.js"
 
 const buttons = document.querySelectorAll(".contentSwitcher");
-const contentArea = document.querySelector("#contentArea");
+const datecalc = document.querySelector("#datecalc");
+const timer = document.querySelector("#timer");
 
-var content = {
-    calculator: { 
-        markup: calculatorMarkup,
-        scripts: [{ url: "./assets/scripts/calculator/calculator.js"}],
-        onload : () => {console.log('calculator - loaded')} 
-    },
-    timer: { 
-        markup: timerMarkup,
-        scripts: [{ url: "./assets/scripts/timer/timer.js"}],
-        onload : () => {console.log('timer - loaded')} 
-    }
+var contents = {
+    calculator: datecalc,
+    timer: timer
 };
 
-let switcher = new ContentSwitcher(contentArea, buttons, 'data-content', content);
+let switcher = new ContentSwitcher(buttons, 'data-content', 'hidden', contents);
 switcher.init();
 
-//switcher.switchOn('calculator');
+switcher.switchOn('calculator');
+calculatorInit();
+timerInit();
