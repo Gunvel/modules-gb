@@ -1,7 +1,8 @@
 'use strict';
 
 import { formatError } from "../utils.js";
-import { Howl, Howler } from "howler";
+import { Howl } from "howler";
+import endSound from "../../sounds/endSound.mp3";
 
 let timerForm = null;
 let timerCurrent = null;
@@ -67,7 +68,7 @@ function formSubmitHandler(e) {
 
 export function init() {
     sound = new Howl({
-        src: ['./assets/sounds/endSound.mp3']
+        src: [endSound]
     });
 
     timerForm = document.getElementById("timer");

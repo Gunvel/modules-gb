@@ -6,7 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode=development",
-    "prod": "webpack --mode=production"
+    "prod": "webpack --mode=production",
+    "wclean": "rd /s /q build",
+    "wdev": "npm run wclean && webpack --mode=development",
+    "wprod": "npm run wclean && webpack --mode=production",
+    "uclean": "rm -rf build",
+    "udev": "npm run uclean && webpack --mode=development",
+    "uprod": "npm run uclean && webpack --mode=production",
+    "serve": "webpack serve --mode=development"
   },
   "repository": {
     "type": "git",
@@ -20,8 +27,17 @@
   },
   "homepage": "https://github.com/Gunvel/modules-gb#readme",
   "devDependencies": {
+    "css-loader": "^6.7.3",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.7.3",
+    "sass": "^1.59.2",
+    "sass-loader": "^13.2.0",
+    "style-loader": "^3.3.1",
     "webpack": "^5.76.1",
-    "webpack-cli": "^5.0.1"
+    "webpack-bundle-analyzer": "^4.8.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
     "howler": "^2.2.3",
