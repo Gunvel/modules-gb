@@ -1,6 +1,15 @@
 'use strict';
 
-function startInterval(form, timerCurrent, formatError, sound) {
+import { formatError } from "../utils.js";
+import { Howl } from "howler";
+import endSound from "../../sounds/endSound.mp3";
+
+let timerForm = null;
+let timerCurrent = null;
+let sound = null;
+let intervalIndex = null;
+
+function startInterval(form) {
     let { countSeconds } = form.elements;
     countSeconds = +countSeconds.value;
 
@@ -16,14 +25,15 @@ function startInterval(form, timerCurrent, formatError, sound) {
 
     timerCurrent.innerHTML = `<span>${countSeconds}s</span>`;
 
-    const id = setInterval(() => {
+    stopInterval();
+    intervalIndex = setInterval(() => {
         timerCurrent.innerHTML = `<span>${countSeconds}s</span>`;
 
         countSeconds--;
 
         if (countSeconds <= 0) {
             timerCurrent.innerHTML = '<span>0s</span>';
-            clearTimeout(id);
+            stopInterval();
 
             sound.play();
             return;
@@ -31,42 +41,38 @@ function startInterval(form, timerCurrent, formatError, sound) {
 
         timerCurrent.innerHTML = `<span>${countSeconds}s</span>`;
     }, 1000);
-
-    return id;
 }
 
-function stopInterval(intervalIndex) {
-    if (intervalIndex != null) clearInterval(intervalIndex);
+function stopInterval() {
+    if (intervalIndex != null) {
+        clearInterval(intervalIndex);
+        intervalIndex = null;
+    }
 }
 
-async function Init() {
-    const { formatError } = await import("../utils.js");
-    //const { Howl, Howler } = await import("./howler.js"); //Не знаю почему, но через зависимость не работает
+function formSubmitHandler(e) {
+    e.preventDefault();
 
-    const sound = new Howl({
-        src: ['./assets/sounds/endSound.mp3']
+    const button = e.submitter;
+    if (button == null || button == undefined)
+        return;
+
+    const workMode = button.getAttribute('data-work');
+
+    stopInterval();
+
+    if (workMode === 'start') {
+        startInterval(e.target);
+    }
+}
+
+export function init() {
+    sound = new Howl({
+        src: [endSound]
     });
 
-    const timerForm = document.getElementById("timer_form");
-    const timerCurrent = document.getElementById("timer_current");
+    timerForm = document.getElementById("timer");
+    timerCurrent = document.getElementById("timer_current");
 
-    let intervalIndex = null;
-
-    timerForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const button = e.submitter;
-        if (button == null || button == undefined)
-            return;
-
-        const workMode = button.getAttribute('data-work');
-
-        stopInterval(intervalIndex);
-
-        if (workMode == 'start') {
-            intervalIndex = startInterval(e.target, timerCurrent, formatError, sound);
-        }
-    });
+    timerForm.addEventListener("submit", formSubmitHandler);
 }
-
-Init();
